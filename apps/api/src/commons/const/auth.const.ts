@@ -1,0 +1,2 @@
+export const AUTH_INSTANCE_KEY = 'AUTH_INSTANCE';
+export const AUTH_IS_PUBLIC_KEY = 'AUTH_IS_PUBLIC_KEY';

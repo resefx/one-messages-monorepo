@@ -1,10 +1,16 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { authClient } from '@/components/utils/auth';
 import { MessagesContext } from '../contexts/messagescontext';
 import { IMessage } from '../interfaces/messages.interface';
+
+const socket = io('http://localhost:3003', {
+	autoConnect: false,
+	withCredentials: true,
+});
 
 export default function MessagesProvider({
 	children,
@@ -16,15 +22,54 @@ export default function MessagesProvider({
 	const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [userId, setUserId] = useState<string>('');
+	const router = useRouter();
 
 	useEffect(() => {
-		async function isLogged() {
-			const session = await authClient.getSession();
-			if (!session.data || session.error) redirect('/login');
-			setUserId(session.data.user.id);
+		if (userId && socket.disconnected) {
+			socket.connect();
+			console.log('miasuu');
+			socket.on('message', (event) => {
+				setMessages((prev) => [...prev, event]);
+			});
 		}
 
-		isLogged();
+		return () => {
+			if (userId && socket.connected) socket.disconnect();
+		};
+	}, [userId]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const loginAndConnect = async () => {
+			try {
+				// Login
+				const loginResponse = await authClient.signIn.email({
+					email: 'rodrigo10batista@hotmail.com',
+					password: '123teste',
+				});
+
+				if (loginResponse.error) {
+					console.error('Erro ao fazer login:', loginResponse.error);
+					router.push('/login');
+					return;
+				}
+
+				// Sessão
+				const session = await authClient.getSession();
+				if (!session.data || session.error) {
+					console.error('Sessão inválida:', session.error);
+					router.push('/login');
+					return;
+				}
+				console.log(session.data.session.token);
+				setUserId(session.data.user.id);
+			} catch (err) {
+				console.error('Erro geral:', err);
+				router.push('/login');
+			}
+		};
+
+		loginAndConnect();
 	}, []);
 
 	if (!userId)
@@ -54,6 +99,9 @@ export default function MessagesProvider({
 				setShowScrollToBottom,
 				messages,
 				setMessages,
+				userId,
+				setUserId,
+				socket,
 			}}
 		>
 			{children}

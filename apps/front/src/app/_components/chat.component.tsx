@@ -8,24 +8,28 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMessages } from './contexts/messagescontext';
 import Emojis from './emojis.component';
-import { IMessage } from './interfaces/messages.interface';
 
 export default function Chat() {
 	const {
 		setMessage,
 		message,
 		messages,
-		setMessages,
 		showScrollToBottom,
 		setShowScrollToBottom,
+		userId,
+		socket,
 	} = useMessages();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const scrollAreaRef = useRef<HTMLDivElement>(null);
+	const format = (d: string | number | Date) => {
+		d = new Date(d);
+		return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear().toString().slice(-2)} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		// Scroll para o final apenas se a última mensagem foi enviada pelo usuário
-		if (messages.length > 0 && messages[messages.length - 1].isOwn) {
+		if (messages.length > 0 && messages[messages.length - 1].id === userId) {
 			scrollToBottom();
 		}
 	}, [messages]);
@@ -62,19 +66,9 @@ export default function Chat() {
 		setShowScrollToBottom(false);
 	};
 
-	const handleSendMessage = () => {
+	const handleSendMessage = async () => {
 		if (message.trim() && message.length <= 200) {
-			const newMessage: IMessage = {
-				id: Date.now().toString(),
-				sender: 'Você',
-				content: message,
-				timestamp: new Date().toLocaleTimeString('pt-BR', {
-					hour: '2-digit',
-					minute: '2-digit',
-				}),
-				isOwn: true,
-			};
-			setMessages([...messages, newMessage]);
+			socket.emit('message', message);
 			setMessage('');
 		}
 	};
@@ -88,12 +82,11 @@ export default function Chat() {
 						<Avatar className="h-10 w-10">
 							<AvatarImage src="/placeholder.svg?height=40&width=40" />
 							<AvatarFallback className="bg-gray-100 text-black">
-								GC
+								CG
 							</AvatarFallback>
 						</Avatar>
 						<div>
-							<h2 className="font-semibold text-white">Grupo Principal</h2>
-							<p className="text-sm text-gray-500">8 membros online</p>
+							<h2 className="font-semibold text-white">Chat Global</h2>
 						</div>
 					</div>
 					<div className="flex items-center gap-1">
@@ -130,26 +123,26 @@ export default function Chat() {
 					{messages.map((msg) => (
 						<div
 							key={msg.id}
-							className={`flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`}
+							className={`flex ${msg.userId === userId ? 'justify-end' : 'justify-start'}`}
 						>
 							<div
 								className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-									msg.isOwn
+									msg.userId === userId
 										? 'bg-rose-900 text-white rounded-br-md'
 										: 'bg-gray-100 text-gray-900 rounded-bl-md'
 								}`}
 							>
-								{!msg.isOwn && (
+								{msg.userId !== userId && (
 									<p className="text-xs font-semibold text-rose-600 mb-1">
-										{msg.sender}
+										{msg.userId}
 									</p>
 								)}
 								<div className="flex items-end gap-2">
-									<p className="text-sm leading-relaxed">{msg.content}</p>
+									<p className="text-sm leading-relaxed">{msg.text}</p>
 									<p
-										className={`text-xs mt-2 ${msg.isOwn ? 'text-rose-100' : 'text-gray-500'}`}
+										className={`text-xs mt-2 ${msg.userId === userId ? 'text-rose-100' : 'text-gray-500'}`}
 									>
-										{msg.timestamp}
+										{format(msg.createdAt)}
 									</p>
 								</div>
 							</div>

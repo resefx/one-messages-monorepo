@@ -1,5 +1,4 @@
 import Chat from './_components/chat.component';
-import Contacts from './_components/contacts.component';
 import Posts from './_components/posts.component';
 import MessagesProvider from './_components/providers/messagesprovider';
 
@@ -21,9 +20,6 @@ export default function ChatApp() {
 
 				{/* Your Content/Components */}
 				<div className="relative z-10 flex h-screen">
-					{/* Sidebar Esquerda - Grupos e Amigos */}
-					<Contacts />
-
 					{/* Área Central - Chat */}
 					<Chat />
 

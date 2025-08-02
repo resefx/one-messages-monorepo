@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/_api/:path*',
+        destination: `${process.env.URL_BACKEND}/:path*`,
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -89,9 +89,10 @@ model Messages {
 }
 
 model Posts {
-  id        String   @unique @default(cuid())
+  id        String    @unique @default(cuid())
   text      String
   value     Float
-  messageId String   @unique
-  Messages  Messages @relation(fields: [messageId], references: [id])
+  createdAt DateTime? @default(now())
+  messageId String?   @unique
+  Messages  Messages? @relation(fields: [messageId], references: [id])
 }

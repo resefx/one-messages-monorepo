@@ -20,7 +20,8 @@
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
 		"prisma:generate": "dotenv -e ../../.env.local -- npx prisma generate",
-		"prisma:push": "dotenv -e ../../.env.local -- npx prisma db push"
+		"prisma:push": "dotenv -e ../../.env.local -- npx prisma db push",
+		"prisma:seed": "dotenv -e ../../.env.local -- npx prisma db seed"
 	},
 	"dependencies": {
 		"@keyv/redis": "^5.0.0",
@@ -85,5 +86,8 @@
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
+	},
+	"prisma": {
+		"seed": "ts-node prisma/seed.ts"
 	}
 }

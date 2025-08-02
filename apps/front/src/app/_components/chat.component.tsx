@@ -76,24 +76,24 @@ export default function Chat() {
 	return (
 		<div className="overflow-hidden h-screen max-h-screen w-full flex flex-col relative">
 			{/* Header do Chat */}
-			<div className="p-6 backdrop-blur-sm">
+			<div className="p-6 backdrop-blur-sm select-none">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
 						<Avatar className="h-10 w-10">
 							<AvatarImage src="/placeholder.svg?height=40&width=40" />
-							<AvatarFallback className="bg-gray-100 text-black">
+							<AvatarFallback className="bg-black text-white">
 								CG
 							</AvatarFallback>
 						</Avatar>
 						<div>
-							<h2 className="font-semibold text-white">Chat Global</h2>
+							<h2 className="font-semibold text-black">Chat Global</h2>
 						</div>
 					</div>
 					<div className="flex items-center gap-1">
 						<Button
 							variant="ghost"
 							size="icon"
-							className="h-9 w-9 text-white hover:text-gray-700 hover:bg-gray-100"
+							className="h-9 w-9 text-black hover:text-white hover:bg-black"
 						>
 							<MoreVertical className="h-4 w-4" />
 						</Button>
@@ -129,18 +129,18 @@ export default function Chat() {
 								className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
 									msg.userId === userId
 										? 'bg-rose-900 text-white rounded-br-md'
-										: 'bg-gray-100 text-gray-900 rounded-bl-md'
+										: 'bg-black text-white rounded-bl-md'
 								}`}
 							>
 								{msg.userId !== userId && (
 									<p className="text-xs font-semibold text-rose-600 mb-1">
-										{msg.userId}
+										{msg?.User?.name}
 									</p>
 								)}
 								<div className="flex items-end gap-2">
 									<p className="text-sm leading-relaxed">{msg.text}</p>
 									<p
-										className={`text-xs mt-2 ${msg.userId === userId ? 'text-rose-100' : 'text-gray-500'}`}
+										className={`text-xs mt-2 select-none ${msg.userId === userId ? 'text-rose-100' : 'text-gray-500'}`}
 									>
 										{format(msg.createdAt)}
 									</p>

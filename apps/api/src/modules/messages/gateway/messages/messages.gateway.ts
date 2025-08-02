@@ -1,6 +1,6 @@
 import { Logger, UseGuards } from '@nestjs/common';
-import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { AuthGuard } from '../../../authenticator/guards/auth.guard';
 import { MessagesService } from '../../services/messages/messages.service';
 
@@ -12,6 +12,10 @@ import { MessagesService } from '../../services/messages/messages.service';
 })
 export class MessagesGateway {
   constructor(private readonly messagesService: MessagesService) { }
+
+  @WebSocketServer()
+  server: Server;
+
 
   async handleConnection(client: Socket) {
     const user = client.handshake.auth?.user || client.handshake.headers?.['user-id'];
@@ -25,10 +29,11 @@ export class MessagesGateway {
   @UseGuards(AuthGuard)
   @SubscribeMessage('message')
   async handleMessage(client: Socket, payload: string): Promise<void> {
-    Logger.log(`Received message from ${client.id}: ${payload}`);
+    Logger.log(`Received message from ${client.id}: ${payload} and room ${client.rooms}`);
+
     const msg = await this.messagesService.createMessage(payload, client.session?.user?.id);
     Logger.log(`Message created: ${JSON.stringify(msg)}`);
-    client.emit('message', msg);
+    this.server.emit('message', msg);
   }
 
   @UseGuards(AuthGuard)

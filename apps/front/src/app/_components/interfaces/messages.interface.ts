@@ -10,24 +10,16 @@ export interface IContact {
 }
 
 export interface IMessage {
-    // id: string;
-    // sender: string;
-    // content: string;
-    // timestamp: string;
-    // isOwn: boolean;
-
+    User: {
+        name: string;
+    };
     id: string;
     text: string;
     userId: string;
     createdAt: Date;
 }
 
-export interface IFixedMessage {
-    // id: string;
-    // content: string;
-    // timestamp: string;
-
+export interface IPosts {
     id: string;
     text: string;
-    messages: IMessage;
 }

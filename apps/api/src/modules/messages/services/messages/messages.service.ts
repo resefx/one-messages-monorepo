@@ -9,12 +9,23 @@ export class MessagesService {
     async createMessage(
         text: string,
         userId: string,
-    ): Promise<messagesEntity> {
+    ): Promise<Partial<messagesEntity>> {
         return await this.prisma.messages.create({
             data: {
                 text,
                 userId,
             },
+            select: {
+                id: true,
+                text: true,
+                userId: true,
+                createdAt: true,
+                User: {
+                    select: {
+                        name: true,
+                    }
+                }
+            }
         });
     }
 
@@ -28,11 +39,17 @@ export class MessagesService {
                 id: true,
                 text: true,
                 userId: true,
+                createdAt: true,
+                User: {
+                    select: {
+                        name: true,
+                    }
+                }
             },
             take: limit > 100 ? 100 : limit,
             orderBy: {
                 createdAt: 'desc',
             },
-        });
+        }).then(messages => messages.map((message: Partial<messagesEntity>) => new messagesEntity(message)));
     }
 }

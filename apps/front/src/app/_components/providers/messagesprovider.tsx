@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
@@ -38,22 +39,21 @@ export default function MessagesProvider({
 		};
 	}, [userId]);
 
+	useEffect(() => {
+		if (userId) {
+			axios.get('http://localhost:3003/messages').then((resp) => {
+				console.log({
+					msg: resp,
+				});
+				setMessages(resp.data);
+			});
+		}
+	}, [userId]);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const loginAndConnect = async () => {
 			try {
-				// Login
-				const loginResponse = await authClient.signIn.email({
-					email: 'rodrigo10batista@hotmail.com',
-					password: '123teste',
-				});
-
-				if (loginResponse.error) {
-					console.error('Erro ao fazer login:', loginResponse.error);
-					router.push('/login');
-					return;
-				}
-
 				// Sessão
 				const session = await authClient.getSession();
 				if (!session.data || session.error) {
@@ -61,7 +61,7 @@ export default function MessagesProvider({
 					router.push('/login');
 					return;
 				}
-				console.log(session.data.session.token);
+
 				setUserId(session.data.user.id);
 			} catch (err) {
 				console.error('Erro geral:', err);
@@ -75,7 +75,6 @@ export default function MessagesProvider({
 	if (!userId)
 		return (
 			<main className="min-h-screen w-full bg-[#020617] relative">
-				{/* Dark Radial Glow Background */}
 				<div
 					className="absolute inset-0 z-0"
 					style={{

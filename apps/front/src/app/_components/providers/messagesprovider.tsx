@@ -42,9 +42,6 @@ export default function MessagesProvider({
 	useEffect(() => {
 		if (userId) {
 			axios.get('http://localhost:3003/messages').then((resp) => {
-				console.log({
-					msg: resp,
-				});
 				setMessages(resp.data);
 			});
 		}
@@ -57,14 +54,12 @@ export default function MessagesProvider({
 				// Sessão
 				const session = await authClient.getSession();
 				if (!session.data || session.error) {
-					console.error('Sessão inválida:', session.error);
 					router.push('/login');
 					return;
 				}
 
 				setUserId(session.data.user.id);
 			} catch (err) {
-				console.error('Erro geral:', err);
 				router.push('/login');
 			}
 		};

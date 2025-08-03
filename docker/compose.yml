@@ -6,7 +6,7 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     env_file:
-      - ../.env
+      - .env
     volumes:
       - one_db_citus_data:/var/lib/postgresql/data
     networks:
@@ -18,7 +18,7 @@ services:
     ports:
       - ${PORT_REDIS}:6379
     env_file:
-      - ../.env
+      - .env
     networks:
       - app-one
     volumes:
@@ -29,38 +29,32 @@ services:
       interval: 30s
       timeout: 5s
       retries: 10
-  # app:
-  #   build:
-  #     context: ./apps/one
-  #     dockerfile: Dockerfile
-  #   container_name: one_app
-  #   env_file:
-  #     - ../.env
-  #   ports:
-  #     - ${PORT_BACKEND}:${PORT_BACKEND}
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   networks:
-  #     - app-one
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #     - ${PORT_PROMETHEUS}:9090
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
-  #   networks:
-  #     - app-one
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   ports:
-  #     - ${PORT_GRANAFA}:3000
-  #   environment:
-  #     - GF_SECURITY_ADMIN_PASSWORD=admin
-  #   networks:
-  #     - app-one
+  app:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: one_app
+    env_file:
+      - .env
+    ports:
+      - ${PORT_BACKEND}:${PORT_BACKEND}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-one
+  frontend:
+    build:
+      context: ../apps/front
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - ${PORT_FRONTEND}:3000
+    depends_on:
+      - app
+    networks:
+      - app-one
 
 volumes:
   one_db_citus_data:

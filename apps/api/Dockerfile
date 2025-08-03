@@ -1,24 +1,31 @@
-FROM node:lts-alpine
+FROM node:lts-alpine AS base
 
+FROM base AS deps
 WORKDIR /apps/api
 
-RUN addgroup --system api && \
-    adduser --system -G api api
+COPY package.json ./
+RUN npm install
 
-# Copia o código compilado do dist correto
-COPY ./dist ./dist/
+FROM base AS builder
+WORKDIR /apps/api
 
-# Copia o package.json gerado pelo webpack e instala as dependências
-COPY ./dist/package.json ./
-RUN npm install --omit=dev
+COPY --from=deps /apps/api/node_modules ./node_modules
+COPY . . 
 
-# Copia os arquivos do Prisma para o local correto
-RUN mkdir -p src/generated/prisma && \
-    cp -r dist/src/generated/prisma/* src/generated/prisma/
+RUN npx prisma generate
+RUN npm run build
 
-# Muda as permissões
-RUN chown -R api:api ./dist ./src
+FROM base AS runner
+WORKDIR /apps/api
+
+RUN addgroup --system api && adduser --system -G api api
+
+COPY --from=builder /apps/api/node_modules ./node_modules
+COPY --from=builder /apps/api/dist ./dist
+COPY --from=builder /apps/api/prisma ./prisma
+
+RUN chown -R api:api ./dist ./prisma
 
 USER api
 
-CMD [ "node", "dist/main.js" ]
+CMD ["node", "dist/src/main.js"]

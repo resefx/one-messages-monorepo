@@ -1,135 +1,136 @@
-# Turborepo starter
+# 🚀 Socket.IO + Better-Auth Integration Demo
 
-This Turborepo starter is maintained by the Turborepo core team.
+Um projeto de demonstração que integra **Socket.IO** com **Better-Auth** em uma arquitetura moderna com Docker, mostrando comunicação em tempo real com autenticação robusta.
 
-## Using this example
+## 🎯 Objetivo
 
-Run the following command:
+Este projeto demonstra a integração eficiente entre:
+- **Socket.IO** para comunicação em tempo real
+- **Better-Auth** para autenticação segura
+- **Docker** para containerização completa
+- **NestJS** como backend robusto
+- **Next.js** como frontend moderno
 
-```sh
-npx create-turbo@latest
+## 🛠️ Stack Tecnológica
+
+### Backend (API)
+- **NestJS** - Framework Node.js para aplicações escaláveis
+- **Socket.IO** - Comunicação em tempo real
+- **Better-Auth** - Sistema de autenticação moderno
+- **Prisma** - ORM para PostgreSQL
+- **Fastify** - Servidor HTTP de alta performance
+- **Redis** - Cache e sessões
+- **PostgreSQL (Citus)** - Banco de dados principal
+
+### Frontend
+- **Next.js 15** - Framework React com App Router
+- **React 19** - Biblioteca de interface
+- **Socket.IO Client** - Cliente para comunicação em tempo real
+- **Tailwind CSS** - Framework CSS utilitário
+- **Radix UI** - Componentes acessíveis
+- **Lucide React** - Ícones modernos
+
+### DevOps & Ferramentas
+- **Docker** - Containerização
+- **Turbo** - Build system monorepo
+- **Biome** - Linter e formatter
+- **TypeScript** - Tipagem estática
+- **PNPM** - Gerenciador de pacotes
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+- Node.js 18+ (para desenvolvimento local)
+
+### Execução com Docker (Recomendado)
+
+1. **Configure as variáveis de ambiente:**
+```bash
+cp example.env.local docker/.env
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+2. **Execute o projeto:**
+```bash
+cd docker
+docker-compose up -d
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+3. **Acesse a aplicação:**
+- Frontend: http://127.0.1.1:3600
+- Backend API: http://127.0.1.1:3003
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Desenvolvimento Local
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+1. **Instale as dependências:**
+```bash
+pnpm install
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+2. **Configure as variáveis:**
+```bash
+cp example.env.local .env.local
 ```
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+3. **Execute o desenvolvimento:**
+```bash
+pnpm dev
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 📁 Estrutura do Projeto
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+one/
+├── apps/
+│   ├── api/          # Backend NestJS
+│   └── front/        # Frontend Next.js
+├── docker/           # Configurações Docker
+└── package.json      # Workspace root
 ```
 
-## Useful Links
+## 🔧 Serviços Docker
 
-Learn more about the power of Turborepo:
+- **Frontend**: Next.js na porta 3600
+- **Backend**: NestJS na porta 3003
+- **PostgreSQL**: Citus na porta 3303
+- **Redis**: Cache na porta 3300
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## 🎨 Funcionalidades
+
+- ✅ Autenticação com Better-Auth
+- ✅ Chat em tempo real com Socket.IO
+- ✅ Interface moderna e responsiva
+- ✅ Containerização completa
+- ✅ Banco de dados PostgreSQL
+- ✅ Cache Redis
+- ✅ TypeScript em todo o projeto
+
+## 🔒 Variáveis de Ambiente
+
+Principais variáveis necessárias:
+- `BETTER_AUTH_SECRET` - Chave secreta para autenticação
+- `POSTGRES_PASSWORD` - Senha do PostgreSQL
+- `REDIS_PASSWORD` - Senha do Redis
+- `PORT_FRONTEND` / `PORT_BACKEND` - Portas dos serviços
+
+## �� Scripts Úteis
+
+```bash
+# Desenvolvimento
+pnpm dev              # Executa frontend e backend
+pnpm build            # Build de todos os serviços
+pnpm lint             # Lint do código
+pnpm format           # Formatação com Prettier
+
+# Docker
+docker-compose up -d  # Inicia todos os serviços
+docker-compose down   # Para todos os serviços
+```
+
+## 🤝 Contribuição
+
+Este é um projeto de demonstração focado em mostrar a integração entre Socket.IO e Better-Auth de forma simples e eficiente.
+
+---
+
+**Desenvolvido para demonstrar habilidades em integração de tecnologias modernas com foco em simplicidade e eficiência.**

@@ -92,7 +92,7 @@ one/
 
 - **Frontend**: Next.js na porta 3600
 - **Backend**: NestJS na porta 3003
-- **PostgreSQL**: Citus na porta 3303
+- **PostgreSQL**: Citus na porta 5432
 - **Redis**: Cache na porta 3300
 
 ## 🎨 Funcionalidades
